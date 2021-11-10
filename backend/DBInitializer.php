@@ -29,7 +29,7 @@ class DBInitializer
             # [START cloud_sql_mysql_pdo_create_socket]
             $username = 'dbconnector';
             $password = '';
-            $dbName = 'pokeMain';
+            $dbName = 'poke-main';
             $connectionName = 'poketeams:us-east4:poke-main';
             $socketDir = '/cloudsql';
 
