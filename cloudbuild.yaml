@@ -11,5 +11,5 @@ steps:
   env:
   - 'CI = false'
 - name: "gcr.io/cloud-builders/gcloud"
-  args: ["app", "deploy"]
+  args: ["app", "deploy", "frontend/frontend.yaml", "backend/backend.yaml"]
 timeout: "1600s"
