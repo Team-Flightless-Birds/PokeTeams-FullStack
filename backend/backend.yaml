@@ -3,5 +3,5 @@ runtime: php73
 service: backend
 
 # Defaults to "serve index.php"
-entrypoint: serve simpleform.php
+#entrypoint: serve simpleform.php
 # If your main page is index.php, comment the above entrypoint setting

@@ -12,11 +12,12 @@
 
   <h1>PHP to DB test</h1>
   
+  <h3> SELECT * FROM Users </h3>
 <?php
-    require "DBInitializer.php";
+    require('dbinitializer.php');
     $db = DBInitializer::initUnixDatabaseConnection();
-    $dbh->query("use pokeMain");
-    $stmt = $pdo->query("SELECT * FROM Users");
+    $db->query("use pokeMain");
+    $stmt = $db->query("SELECT * FROM Users");
     echo "<p>";
     while ($row = $stmt->fetch()) {
         echo $row['email']."<br />\n";

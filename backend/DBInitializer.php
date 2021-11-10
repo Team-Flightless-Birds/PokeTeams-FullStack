@@ -1,7 +1,6 @@
 <?php
 declare(strict_types=1);
 
-namespace Google\Cloud\Samples\CloudSQL\MySQL;
 
 use PDO;
 use PDOException;
@@ -17,21 +16,18 @@ class DBInitializer
      *  @param $socketDir string Full path to unix socket
      *  @param $conn_config array driver-specific options for PDO
      */
-    public static function initUnixDatabaseConnection(
-        string $username,
-        string $password,
-        string $dbName,
-        string $connectionName,
-        string $socketDir,
-        array $conn_config
-    ): PDO {
+    public static function initUnixDatabaseConnection(): PDO {
         try {
             # [START cloud_sql_mysql_pdo_create_socket]
             $username = 'dbconnector';
             $password = '';
-            $dbName = 'poke-main';
+            $dbName = 'pokeMain';
             $connectionName = 'poketeams:us-east4:poke-main';
             $socketDir = '/cloudsql';
+            $connConfig = [
+                PDO::ATTR_TIMEOUT => 5,
+                PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+            ];
 
             // Connect using UNIX sockets
             $dsn = sprintf(
@@ -74,3 +70,4 @@ class DBInitializer
         return $conn;
     }
 }
+?>
