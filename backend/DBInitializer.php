@@ -27,11 +27,11 @@ class DBInitializer
     ): PDO {
         try {
             # [START cloud_sql_mysql_pdo_create_socket]
-            $username = 'root';
-            $password = 'yoursupersecretpassword';
-            // $dbName = 'your_db_name';
-            // $connectionName = getenv("CLOUD_SQL_CONNECTION_NAME");
-            // $socketDir = getenv('DB_SOCKET_DIR') ?: '/cloudsql';
+            $username = 'dbconnector';
+            $password = '';
+            $dbName = 'pokeMain';
+            $connectionName = 'poketeams:us-east4:poke-main';
+            $socketDir = '/cloudsql';
 
             // Connect using UNIX sockets
             $dsn = sprintf(
