@@ -1,10 +1,10 @@
 # cloudbuild.yaml
 steps:
-- name: node
+- name: node:16.13.0
   entrypoint: npm
   args: ["install"]
   dir: 'frontend'
-- name: node
+- name: node:16.13.0
   entrypoint: npm
   args: ["run", "build"]
   dir: 'frontend'
