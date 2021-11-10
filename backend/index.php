@@ -5,9 +5,9 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
       break; 
    case '/simpleform.php':     // if you plan to also allow a URL with the file name 
       require 'simpleform.php';
-      break;              
-   case '/helloworld.php':
-      require 'helloworld.php';
+      break;
+   case '/testDBconnect.php':
+      require 'testDBconnect.php';
       break;
    default:
       http_response_code(404);

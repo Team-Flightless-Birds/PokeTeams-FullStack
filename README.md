@@ -18,6 +18,10 @@ PokeTeams is a full stack CRUD project for CS 4750: Database Systems course at t
     - Then, Google Cloud Build Continueous Deployment will build the build folder, and upload/deploy the project to the GCP. Note: In this process, both the backend PHP and frontend React will be built and deployed even if one or the other did not have any changes.
 - Note: No manual deployment to frontend (such as running ``` gcloud app deploy frontend/frontend.yaml``` ) should be necessary unless for debugging purposes.
 
+## Debug Deploy PHP and MySQL
+1. You can deploy the local changes directly to Google App Engine by doing ```gcloud app deploy backend/backend.yaml```
+- This will only make changes to the backend PHP service without affecting the frontend deployment
+- Only proceed to make a commit to the github repo when the PHP is tested to work through this debug deployment
 ## Deploying to PHP (backend) 
 1. Always ensure you have done ```git pull origin main``` before you do any commits to avoid merge conflicts.
 1. Make necessary changes to the backend contents (in the backend folder) and push the commit to main branch.
