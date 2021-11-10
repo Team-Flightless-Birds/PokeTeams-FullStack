@@ -14,7 +14,7 @@
   
   <h3> SELECT * FROM Users </h3>
 <?php
-    require('dbinitializer.php');
+    require('DBInitializer.php');
     $db = DBInitializer::initUnixDatabaseConnection();
     $db->query("use pokeMain");
     $stmt = $db->query("SELECT * FROM Users");
