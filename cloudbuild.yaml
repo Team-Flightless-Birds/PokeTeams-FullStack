@@ -3,9 +3,11 @@ steps:
 - name: node
   entrypoint: npm
   args: ["install"]
+  dir: 'frontend'
 - name: node
   entrypoint: npm
   args: ["run", "build"]
+  dir: 'frontend'
   env:
   - 'CI = false'
 - name: "gcr.io/cloud-builders/gcloud"
