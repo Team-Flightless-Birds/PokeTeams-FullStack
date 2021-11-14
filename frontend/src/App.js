@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {BrowserRouter as Router, Switch, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Home from './pages/home';
 import Teams from './pages/Teams';
 import logo from './images/logo.jpg';
@@ -91,14 +91,14 @@ export default function App() {
           </AppBar>
         </Box>
         <div>
-          <Switch>
+          <Routes>
             <Route path='/'>
               <Home auth={auth} handleChange={handleChange}/>
             </Route>
             <Route path='/Teams'>
               <Teams/>
             </Route>
-          </Switch>
+          </Routes>
         </div>
       </Router>
     </div>
