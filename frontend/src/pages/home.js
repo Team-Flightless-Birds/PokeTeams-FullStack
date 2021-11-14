@@ -13,7 +13,7 @@ import Button from '@mui/material/Button';
         return(
         
             <div className='App-header'>
-                <Card style={{margin: '20px'}} sx={{ width: '1/2' }}>
+                <Card sx={{ mt: -20, width: '1/2' }}>
                     <CardContent>
                         <Typography style={{marginBottom: '20px'}} align='center' variant='h3'>
                             Welcome to PokéTeams!
