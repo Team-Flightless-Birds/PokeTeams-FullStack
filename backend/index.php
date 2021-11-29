@@ -15,6 +15,9 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
    case '/user_signup.php':
       require 'user_signup.php';
       break;
+   case '/following.php':
+      require 'following.php';
+      break;
    default:
       http_response_code(404);
       exit('Not Found');
