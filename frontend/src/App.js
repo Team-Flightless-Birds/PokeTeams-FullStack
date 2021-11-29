@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Home from './pages/home';
-import Teams from './pages/Teams';
+import Profile from './pages/Profile';
 import logo from './images/logo.jpg';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -79,8 +79,8 @@ export default function App() {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                   >
-                    <MenuItem onClick={handleClose}>idk</MenuItem>
-                    <MenuItem onClick={handleClose}>My Teams</MenuItem>
+                    <MenuItem onClick={handleClose}>Create a team</MenuItem>
+                    <MenuItem onClick={handleClose}>My Profile</MenuItem>
                   </Menu>
                 </div>
               )}
@@ -90,16 +90,14 @@ export default function App() {
             </Toolbar>
           </AppBar>
         </Box>
-        <div>
           <Routes>
-            <Route path='/'>
-              <Home auth={auth} handleChange={handleChange}/>
+            <Route>
+              <Route exact path='/' element={<Home  auth={auth} handleChange={handleChange}/>}/>
             </Route>
-            <Route path='/Teams'>
-              <Teams/>
+            <Route>
+              <Route exact path='/Profile' element={<Profile/>}/>
             </Route>
           </Routes>
-        </div>
       </Router>
     </div>
   );
