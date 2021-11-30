@@ -17,6 +17,8 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
       break;
    case '/user_teams.php':
       require 'user_teams.php';
+   case '/following.php':
+      require 'following.php';
       break;
    default:
       http_response_code(404);
