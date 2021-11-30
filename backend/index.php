@@ -17,6 +17,7 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
       break;
    case '/user_teams.php':
       require 'user_teams.php';
+      break;
    case '/following.php':
       require 'following.php';
       break;
