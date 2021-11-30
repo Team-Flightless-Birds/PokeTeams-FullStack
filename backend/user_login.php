@@ -33,4 +33,6 @@ if (!$sql_result) {
     }
 }
 
+// gcloud app deploy backend/backend.yml
+
 ?>
