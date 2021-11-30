@@ -27,6 +27,24 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
    case '/get_pokemons.php':
       require 'get_pokemons.php';
       break;
+   case '/get_teams_by_uid.php':
+      require 'get_teams_by_uid.php';
+      break;
+   case '/add_following.php':
+      require 'add_following.php';
+      break;
+   case '/del_following.php':
+      require 'del_following.php';
+      break;
+   case '/get_pokemons_by_tid.php':
+      require 'get_pokemons_by_tid.php';
+      break;
+   case '/add_fav_pokemon.php':
+      require 'add_fav_pokemon.php';
+      break;
+   case '/del_fav_pokemon.php':
+      require 'del_fav_pokemon.php';
+      break;
    default:
       http_response_code(404);
       exit('Not Found');
