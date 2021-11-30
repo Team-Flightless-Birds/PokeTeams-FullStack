@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import Home from './pages/home';
 import Profile from './pages/Profile';
 import logo from './images/logo.jpg';
@@ -18,11 +18,12 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import './App.css';
 
+
 export default function App() {
   const [auth, setAuth] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
 
-  const handleChange = (event) => {
+  const handleChange = () => {
     setAuth(!auth);
   };
 
@@ -92,7 +93,12 @@ export default function App() {
         </Box>
           <Routes>
             <Route>
-              <Route exact path='/' element={<Home  auth={auth} handleChange={handleChange}/>}/>
+              {!auth && (
+                <Route exact path='/' element={<Home auth={auth} setAuth={setAuth}/>}/>
+              )}
+              {auth && (
+                <Route path="/" element={<Navigate replace to="/profile" />} />
+              )}
             </Route>
             <Route>
               <Route exact path='/Profile' element={<Profile/>}/>
