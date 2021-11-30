@@ -4,6 +4,10 @@ $db = DBInitializer::initUnixDatabaseConnection();
 
 $method = $_SERVER['REQUEST_METHOD'];
 
+header('Access-Control-Allow-Origin: *');
+header('Access-Control-Allow-Methods: GET, POST');
+header("Access-Control-Allow-Headers: X-Requested-With");
+
 if ($method == 'GET') {
     $email = $_GET['email'];
     $hashed_password = $_GET['password'];
