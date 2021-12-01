@@ -12,6 +12,7 @@ import { useParams } from 'react-router-dom'
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
+import Home from "./home";
 
 
 const style = {
@@ -20,14 +21,21 @@ const style = {
     bgcolor: 'background.paper',
 };
 
-export default function Profile({ auth, handleChange }) {
+export default function Profile() {
     const [following, setFollowing] = useState([]);
     const [favs, setFavs] = useState([]);
     const [teams, setTeams] = useState([]);
-    const { uid } = useParams();
+    let { urlid } = useParams();
+    const uid = window.sessionStorage.getItem("uid")
+    const email = window.sessionStorage.getItem("email")
+    const auth = window.sessionStorage.getItem("auth")
+
+    if (!urlid) {
+        urlid = uid
+    }
 
     useEffect(() => {
-        fetch('https://backend-dot-poketeams.uk.r.appspot.com/following.php?uid=' + uid.toString())
+        fetch('https://backend-dot-poketeams.uk.r.appspot.com/following.php?uid=' + urlid)
             .then((res) => res.json())
             .then((res) => {
                 let f = res.following
@@ -38,10 +46,10 @@ export default function Profile({ auth, handleChange }) {
                 }
                 //console.log(following[0][0])
                 //console.log(typeof(following[0][0]))
-                console.log(following)
+                console.log(uid)
             })
 
-        fetch('https://backend-dot-poketeams.uk.r.appspot.com/get_fav_pokemon.php?uid=' + uid.toString())
+        fetch('https://backend-dot-poketeams.uk.r.appspot.com/get_fav_pokemon.php?uid=' + urlid)
             .then((res) => res.json())
             .then((res) => {
                 let f = res.fav_pokemons
@@ -54,7 +62,7 @@ export default function Profile({ auth, handleChange }) {
 
 
 
-        fetch('https://backend-dot-poketeams.uk.r.appspot.com/user_teams.php?uid=' + uid.toString())
+        fetch('https://backend-dot-poketeams.uk.r.appspot.com/user_teams.php?uid=' + urlid)
             .then((res) => res.json())
             .then((res) => {
                 let f = res.teams
@@ -65,34 +73,41 @@ export default function Profile({ auth, handleChange }) {
                 }
             });
 
-    }, [uid]);
+    }, [urlid]);
+
+
+
+    const unfollow = (unfollow_uid) => {
+
+        fetch('https://backend-dot-poketeams.uk.r.appspot.com/del_following.php?self_uid=' + uid + '&target_uid=' + unfollow_uid)
+            .then((res) => res.json())
+            .then((res) => {
+            });
+
+    }
 
 
 
 
-    if (!auth) { // if logged in
+    if (auth) { // if logged in
 
         let following_list_items = []
-
         for (let i = 0; i < following.length; i++) {
             let follow = following[i]
             let link = "/profile/" + follow[0]
 
             if (i == following.length - 1) {
-                following_list_items.push(<ListItem ><ListItemButton component="a" href={link}>{follow[1]}</ListItemButton><Button>Unfollow</Button></ListItem>)
+                following_list_items.push(<ListItem ><ListItemButton component="a" href={link}>{follow[1]}</ListItemButton><Button onClick={() => unfollow(follow[0])}>Unfollow</Button></ListItem>)
             }
             else {
                 following_list_items.push(<ListItem ><ListItemButton divider component="a" href={link}>{follow[1]}</ListItemButton><Button>Unfollow</Button></ListItem>)
             }
         }
 
-
         let fav_image_list = []
-
         for (let i = 0; i < favs.length; i++) {
             let image = favs[i][1]
             let name = favs[i][0]
-
 
             fav_image_list.push(
                 <ImageListItem>
@@ -111,9 +126,7 @@ export default function Profile({ auth, handleChange }) {
         }
 
 
-
         let team_list = []
-
         for (let i = 0; i < teams.length; i++) {
             let name = teams[i][1]
             let tid = teams[i][0]
@@ -133,6 +146,7 @@ export default function Profile({ auth, handleChange }) {
         return (
             <div className='App-header'>
                 <div>
+                    <Typography style={{ marginBottom: '20px' }} align='center' variant='h3'>{uid}</Typography>
                     <Typography style={{ marginBottom: '20px' }} align='center' variant='h3'>Followed Users</Typography>
                     <List sx={style}>
                         {following_list_items}
@@ -161,7 +175,7 @@ export default function Profile({ auth, handleChange }) {
     else {
         return (
             <div className='App-header'>
-                You are logged in, bud
+                You are not logged in
             </div>
         )
     }

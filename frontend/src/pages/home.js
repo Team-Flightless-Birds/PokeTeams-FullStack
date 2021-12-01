@@ -11,11 +11,12 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
-const Home = ({auth, setAuth}) => {
+
+const Home = ({auth, setAuth, email, setEmail, uid, setUid}) => {
     const [openLogin, setOpenLogin] = useState(false);
     const [openSignUp, setOpenSignUp] = useState(false);
     const [password, setPassword] = useState('');
-    const [email, setEmail] = useState('');
+    // const [email, setEmail] = useState('');
     const [confirmPass, setConfirmPass] = useState('');
 
     const handleOpenModalSignUp = () => setOpenSignUp(true);
@@ -60,7 +61,13 @@ const Home = ({auth, setAuth}) => {
             .then((res)=>{
               if (res.login_success) {
                 setAuth(true)
+                setUid(res.uid)
+                window.sessionStorage.setItem("auth", auth);
+                window.sessionStorage.setItem("uid", res.uid);
+                window.sessionStorage.setItem("email", email);
                 handleCloseModalLogin()
+
+
               }
             });
     }
