@@ -3,25 +3,30 @@ import React from 'react';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
+import Grid from '@mui/material/Grid';
 
 const Pokemon = ({pokename, url}) => {
-
     return(
-        <div>
-            <Card sx={{width: '50%' }}>
+        <Card sx={{mx: '20px', mt: '20px', alignItems: 'center', justifyContent: 'center'}}>
+            <Grid container spacing={2}>
+                <Grid item xs={2}></Grid>
+                <Grid item xs={8}>
                 {pokename.length > 0 && (
                 <CardContent>
-                    <img src={url} alt={pokename}></img>
-                    <Typography variant='body3'>{pokename}</Typography>
+                        <img height='250px' width='250px' src={url} alt={pokename}></img><br/>
+                        <Grid container spacing={2}>
+                        <Grid item xs={2}></Grid>
+                        <Grid item xs={8}>
+                            <Typography sx={{ml: '15px'}} variant='body3'>{pokename}</Typography>
+                        </Grid>
+                        <Grid item xs={2}></Grid>
+                    </Grid>
                 </CardContent>
                 )}
-                {pokename.length === 0 && ( //empty jsut plus siugn or some
-                    <CardContent>
-                        <img src='https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqm6gbjDozzHoONB_v4tAsKmB5AEwMkdvrQ9Hj_KZ8fFJDaUja_bPTO9Eu-QwikPRD8gU&usqp=CAU' alt='plus'></img>
-                    </CardContent> 
-                )}
-            </Card>
-        </div>
+                </Grid>
+                <Grid item xs={2}></Grid>
+            </Grid>
+        </Card>
     )
 }
 export default Pokemon;

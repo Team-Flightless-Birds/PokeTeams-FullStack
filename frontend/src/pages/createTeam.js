@@ -17,6 +17,7 @@ import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import Grid from '@mui/material/Grid';
 
 const CreateTeam = ({auth, setAuth, uid}) => {
     const [teamName, setTeamName] = useState('Team Name');
@@ -65,7 +66,18 @@ const CreateTeam = ({auth, setAuth, uid}) => {
 
     const handleSumbit = () => {
         if (teammons.length > 0) {
-
+            fetch('https://backend-dot-poketeams.uk.r.appspot.com/create_user_team.php?uid=' + uid + '&team_name=' + teamName)
+            .then((res) => res.json())
+            .then((res)=>{
+                const tid = res.tid
+                for (let i = 0; i < teammons.length; i++) {
+                    if (i > 5) {
+                        break;
+                    }
+                    fetch('https://backend-dot-poketeams.uk.r.appspot.com/add_pokemon_to_team.php?tid=' + tid + '&pokeindex=' + teammons[i][0])
+                    //should redirect
+                } 
+            })
         } else {
             alert('Must add at least one Pokemon to your team first!')
         }
@@ -73,90 +85,137 @@ const CreateTeam = ({auth, setAuth, uid}) => {
 
     return(
         <div className='App-header'>
-            <Card sx={{ width: '75%' }}>
-                <CardContent>
-                    <Typography align='center' variant='h3'>
-                        Create a Team!
-                    </Typography>
-                </CardContent>
-            </Card> <br/>
-            <Card sx={{ width: '75%' }}>
-                <CardContent>
-                    <Typography sx={{display: 'inline-block'}} variant='h3'>
-                        {teamName}
-                    </Typography>
-                    <Button sx={{display: 'inline-block', textTransform:'none', fontSize:'20px'}} onClick={handleOpenModalTeam} size='medium'><EditSharpIcon/></Button>
-                    <Dialog open={openTeamNameChange} onClose={handleCloseModalTeam}>
-                        <DialogTitle>Edit Team Name</DialogTitle>
-                        <DialogContent>
-                            <TextField
-                                autoFocus
-                                onChange={handleTeamName}
-                                margin="dense"
-                                id="team name"
-                                label="Team Name"
-                                type="text"
-                                variant="standard"
-                            />
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={handleCloseModalTeam}>Cancel</Button>
-                            <Button onClick={handleCloseModalTeam}>Save</Button>
-                        </DialogActions>
-                    </Dialog>
-                    {teammons.map((teammon) => {
-                        return(
-                            <>
-                                <Pokemon pokename={teammon[1][0]} url={teammon[1].url}/>
-                                <Button key={teammon[1][0] + 'button'} onClick={() => handleRemove(teammon)}>
-                                    <RemoveCircleIcon key={teammon[1][0] + 'icon'}/>
-                                </Button>
-                            </>
-                            )
-                    })}
-                </CardContent>
-                <CardActions>
-                    <Button onClick={handleSumbit}>Create!</Button>
-                </CardActions>
-            </Card> <br/>
-            <Card sx={{ width: '75%' }}>
-                <CardContent>
-                    <Typography align='center' variant='h4'>Search</Typography>
-                </CardContent>
-                <CardActions>
-                    <TextField
-                        autoFocus
-                        onChange={handleKeyword}
-                        margin="dense"
-                        id="keyword"
-                        label="Keyword"
-                        type="text"
-                        variant="standard"
-                    />
-                    <TextField
-                        onChange={handleType}
-                        margin="dense"
-                        id="keyword"
-                        label="Type"
-                        type="text"
-                        variant="standard"
-                    />
-                    <FormGroup>
-                        <FormControlLabel onClick={handleFavorited} control={<Checkbox/>} label="Favorited?" />
-                    </FormGroup>
-                    <Button onClick={handleSearch}>Search</Button>
-                </CardActions>
-            </Card>
-            {pokemons.map((pokemon) => {    
+            <Grid container spacing={2}>
+                <Grid item xs={2}></Grid>
+                <Grid item xs={8}>
+                    <Card sx={{ mt: '20px'}}>
+                        <CardContent>
+                            <Typography align='center' variant='h3'>
+                                Create a Team!
+                            </Typography>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={2}></Grid>
+                <Grid item xs={2}></Grid>
+                <Grid item xs={8}>
+                    <Card sx={{  }}>
+                        <CardContent sx={{alignItems: 'center'}}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={2}></Grid>
+                                <Grid item xs={8}>
+                                    <Grid container spacing={2}>
+                                        <Grid item xs={2}></Grid>
+                                        <Grid item xs={8}>
+                                            <Grid container spacing={2}>
+                                                <Grid item xs={2}></Grid>
+                                                <Grid item xs={8}>
+                                                    <Typography sx={{display: 'inline-block', ml: '50px'}} variant='h4'>
+                                                        {teamName}
+                                                    </Typography>
+                                                    <Button sx={{display: 'inline-block'}} onClick={handleOpenModalTeam} size='medium'><EditSharpIcon/></Button>
+                                                </Grid>
+                                                <Grid item xs={2}></Grid>
+                                            </Grid>
+                                        </Grid>
+                                        <Grid item xs={2}></Grid>
+                                    </Grid>
+                                    <Dialog open={openTeamNameChange} onClose={handleCloseModalTeam}>
+                                        <DialogTitle>Edit Team Name</DialogTitle>
+                                        <DialogContent>
+                                            <TextField
+                                                autoFocus
+                                                onChange={handleTeamName}
+                                                margin="dense"
+                                                id="team name"
+                                                label="Team Name"
+                                                type="text"
+                                                variant="standard"
+                                            />
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={handleCloseModalTeam}>Cancel</Button>
+                                            <Button onClick={handleCloseModalTeam}>Save</Button>
+                                        </DialogActions>
+                                    </Dialog>
+                                </Grid>
+                                <Grid item xs={2}></Grid>
+                            </Grid>
+                            <Grid container spacing={2}>
+                            {teammons.map((teammon) => {
+                                return(
+                                    <Grid item xs={4}>
+                                        <Pokemon pokename={teammon[1][0]} url={teammon[1].url}/>
+                                        <Button key={teammon[1][0] + 'button'} onClick={() => handleRemove(teammon)}>
+                                            <RemoveCircleIcon sx={{ml: '190px'}} key={teammon[1][0] + 'icon'}/>
+                                        </Button>
+                                    </Grid>
+                                    )
+                            })}
+                            </Grid>
+                        </CardContent>
+                        <CardActions>
+                            <Button onClick={handleSumbit}>Create!</Button>
+                        </CardActions>
+                    </Card>
+                </Grid>
+                <Grid item xs={2}></Grid>
+                <Grid item xs={2}></Grid>
+                <Grid item xs={8}>
+                    <Card sx={{  }}>
+                        <CardContent>
+                            <Typography align='center' variant='h4'>Search</Typography>
+                        </CardContent>
+                        <CardActions>
+                            <Grid container spacing={3}>
+                                <Grid item xs={2}></Grid>
+                                <Grid item xs={2}>
+                                    <TextField
+                                        autoFocus
+                                        onChange={handleKeyword}
+                                        margin="dense"
+                                        id="keyword"
+                                        label="Keyword"
+                                        type="text"
+                                        variant="standard"
+                                    />
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <TextField
+                                        onChange={handleType}
+                                        margin="dense"
+                                        id="keyword"
+                                        label="Type"
+                                        type="text"
+                                        variant="standard"
+                                    />
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <FormGroup>
+                                        <FormControlLabel onClick={handleFavorited} control={<Checkbox/>} label="Favorited?" />
+                                    </FormGroup>
+                                </Grid>
+                                <Grid item xs={2}>
+                                    <Button onClick={handleSearch}>Search</Button>
+                                </Grid>
+                                <Grid item xs={2}></Grid>
+                            </Grid>
+                        </CardActions>
+                    </Card>
+                </Grid>
+            </Grid>
+            <Grid container spacing={3}>
+                {pokemons.map((pokemon) => {    
                     return (
-                        <>
+                        <Grid item xs={3}>
                             <Pokemon key={pokemon[1][0]} pokename={pokemon[1][0]} url={pokemon[1].url}/>
                             <Button key={pokemon[1][0] + 'button'} onClick={() => handleAdd(pokemon)}>
-                                <AddCircleIcon key={pokemon[1][0] + 'icon'}/>
+                                <AddCircleIcon sx={{pl: '210px'}} key={pokemon[1][0] + 'icon'}/>
                             </Button>
-                        </>
+                        </Grid>
                     )
-            })}
+                })}
+            </Grid>
         </div>
     )
 }
