@@ -34,7 +34,7 @@ export default function Profile() {
         fetch('https://backend-dot-poketeams.uk.r.appspot.com/following.php?uid=' + urlid)
             .then((res) => res.json())
             .then((res) => {
-                let f = res.following
+                //let f = res.following
 
                 setFollowing(Object.entries(res.following))
                 // for (const [key, value] of Object.entries(f)) {
@@ -46,19 +46,21 @@ export default function Profile() {
         fetch('https://backend-dot-poketeams.uk.r.appspot.com/get_fav_pokemon.php?uid=' + urlid)
             .then((res) => res.json())
             .then((res) => {
-                let f = res.fav_pokemons
-                for (const [key, value] of Object.entries(f)) {
-                    setFavs([...favs, [key, value]])
-                }
+                //let f = res.fav_pokemons
+                setFavs(Object.entries(res.fav_pokemons))
+                // for (const [key, value] of Object.entries(f)) {
+                //     setFavs([...favs, [key, value]])
+                // }
             });
 
         fetch('https://backend-dot-poketeams.uk.r.appspot.com/user_teams.php?uid=' + urlid)
             .then((res) => res.json())
             .then((res) => {
-                let f = res.teams
-                for (const [key, value] of Object.entries(f)) {
-                    setTeams([...teams, [key, value]])
-                }
+                //let f = res.teams
+                setTeams(Object.entries(res.teams))
+                // for (const [key, value] of Object.entries(f)) {
+                //     setTeams([...teams, [key, value]])
+                // }
             });
         fetch('https://backend-dot-poketeams.uk.r.appspot.com/uid_to_email.php?uid=' + urlid)
             .then((res) => res.json())
@@ -77,7 +79,6 @@ export default function Profile() {
             .then((res) => {
             });
 
-        this.forceUpdate();
     }
 
 
@@ -117,10 +118,9 @@ export default function Profile() {
         // }
 
         let fav_image_list = []
-        for (let i = 0; i < favs.length; i++) {
-            let image = favs[i][1]
-            let name = favs[i][0]
-
+        favs.map((fav, i, arr) => {    
+            let image = fav[1]
+            let name = fav[0]
             fav_image_list.push(
                 <ImageListItem>
                     <img
@@ -135,24 +135,60 @@ export default function Profile() {
                     />
                 </ImageListItem>
             )
-        }
+        })
+
+        // let fav_image_list = []
+        // for (let i = 0; i < favs.length; i++) {
+        //     let image = favs[i][1]
+        //     let name = favs[i][0]
+
+        //     fav_image_list.push(
+        //         <ImageListItem>
+        //             <img
+        //                 src={`${image}?w=248&fit=crop&auto=format`}
+        //                 srcSet={`${image}?w=248&fit=crop&auto=format&dpr=2 2x`}
+        //                 alt={name}
+        //                 loading="lazy"
+        //             />
+        //             <ImageListItemBar
+        //                 title={name}
+        //                 position="below"
+        //             />
+        //         </ImageListItem>
+        //     )
+        // }
 
 
         let team_list = []
-        for (let i = 0; i < teams.length; i++) {
-            let name = teams[i][1]
-            let tid = teams[i][0]
+        teams.map((team, i, arr) => {    
+            let name = team[1]
+            let tid = team[0]
 
             let link = "/edit/" + tid
 
-
-            if (i === teams.length - 1) {
-                team_list.push(<ListItem ><ListItemButton component="a" href={link}>{name}</ListItemButton><Button>Delete Team</Button></ListItem>)
+            if (i === arr.length - 1) {
+                team_list.push(<ListItem ><ListItemButton>{name}</ListItemButton><Button>Delete Team</Button></ListItem>)
             }
             else {
-                team_list.push(<ListItem ><ListItemButton divider component="a" href={link}>{name}</ListItemButton><Button>Delete Team</Button></ListItem>)
+                team_list.push(<ListItem ><ListItemButton divider>{name}</ListItemButton><Button>Delete Team</Button></ListItem>)
             }
-        }
+        })
+
+        // let team_list = []
+        // for (let i = 0; i < teams.length; i++) {
+        //     let name = teams[i][1]
+        //     let tid = teams[i][0]
+
+        //     let link = "/edit/" + tid
+
+
+        //     if (i === teams.length - 1) {
+        //         team_list.push(<ListItem ><ListItemButton component="a" href={link}>{name}</ListItemButton><Button>Delete Team</Button></ListItem>)
+        //     }
+        //     else {
+        //         team_list.push(<ListItem ><ListItemButton divider component="a" href={link}>{name}</ListItemButton><Button>Delete Team</Button></ListItem>)
+        //     }
+        // }
 
 
         return (
