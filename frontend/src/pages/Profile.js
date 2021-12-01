@@ -29,10 +29,6 @@ export default function Profile() {
     const uid = window.sessionStorage.getItem("uid")
     const email = window.sessionStorage.getItem("email")
 
-    if (!urlid) {
-        urlid = uid
-    }
-
     useEffect(() => {
         fetch('https://backend-dot-poketeams.uk.r.appspot.com/following.php?uid=' + urlid)
             .then((res) => res.json())
