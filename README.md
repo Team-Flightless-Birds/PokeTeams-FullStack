@@ -1,4 +1,4 @@
-# PokeTeams-React
+# PokeTeams-FullStack
 PokeTeams is a full stack CRUD project for CS 4750: Database Systems course at the University of Virginia
 
 # Deployment
@@ -16,7 +16,7 @@ PokeTeams is a full stack CRUD project for CS 4750: Database Systems course at t
 4. A successful commit or merge to main will trigger the following:
     - Github NodeJS CI workflow will attempt to build to ensure build is successful
     - Then, Google Cloud Build Continueous Deployment will build the build folder, and upload/deploy the project to the GCP. Note: In this process, both the backend PHP and frontend React will be built and deployed even if one or the other did not have any changes.
-- Note: No manual deployment to frontend (such as running ``` gcloud app deploy frontend/frontend.yaml``` ) should be necessary unless for debugging purposes.
+- Note: No manual deployment to frontend (such as running compiling/building react project, ``` gcloud app deploy frontend/frontend.yaml```, etc ) should be necessary unless for debugging purposes, but such debugging should be done locally whenever possible.
 
 ## Debug Deploy PHP and MySQL
 1. You can deploy the local changes directly to Google App Engine by doing ```gcloud app deploy backend/backend.yaml```

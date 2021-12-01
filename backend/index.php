@@ -48,6 +48,24 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
    case '/get_all_not_following.php':
       require 'get_all_not_following.php';
       break;
+   case '/create_user_team.php':
+      require 'create_user_team.php';
+      break;
+   case '/add_pokemon_to_team.php':
+      require 'add_pokemon_to_team.php';
+      break;
+   case '/get_pokemons_in_team.php':
+      require 'get_pokemons_in_team.php';
+      break;
+   case '/update_team_name.php':
+      require 'update_team_name.php';
+      break;
+   case '/uid_to_email.php':
+      require 'uid_to_email.php';
+      break;
+   case '/delete_team.php':
+      require 'delete_team.php';
+      break;
    default:
       http_response_code(404);
       exit('Not Found');
