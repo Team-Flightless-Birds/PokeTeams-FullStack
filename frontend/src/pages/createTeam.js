@@ -28,10 +28,18 @@ const CreateTeam = () => {
     const [favorited, setFavorited] = useState(false);
     const [pokemons, setPokemons] = useState([]);
     const [teammons, setTeammons] = useState([]);
-    const uid = window.sessionStorage.getItem("uid")
+    const [favedmons, setFavedmons] = useState([]);
+    const uid = window.sessionStorage.getItem("uid");
+    
+    useEffect(() => {
+        fetch('https://backend-dot-poketeams.uk.r.appspot.com/get_fav_pokemon.php?uid=' + uid)
+        .then((res) => res.json())
+        .then((res) => {
+            setFavedmons(Object.entries(res.fav_pokemons))
+        })
+    }, [])
 
     const handleSearch = () => {
-        console.log(type)
         let searchString = 'https://backend-dot-poketeams.uk.r.appspot.com/get_pokemons.php?'
         if (favorited) { 
             searchString = searchString + 'is_favorite=true&uid=' + uid + '&'
@@ -150,9 +158,16 @@ const CreateTeam = () => {
                             </Dialog>
                             <Grid container spacing={2}>
                             {teammons.map((teammon) => {
+                                let isFav = false
+                                for (let i = 0; i < favedmons.length; i++) {
+                                    if (favedmons[i][0] === teammon[1][0]) {
+                                        isFav = true
+                                        break
+                                    }
+                                }
                                 return(
                                     <Grid item xs={4}>
-                                        <Pokemon pokename={teammon[1][0]} url={teammon[1].url}/>
+                                        <Pokemon pokename={teammon[1][0]} url={teammon[1].url} pid={teammon[0]} isFav={isFav}/>
                                         <Button key={teammon[1][0] + 'button'} onClick={() => handleRemove(teammon)}>
                                             <RemoveCircleIcon sx={{mx: '50%'}} key={teammon[1][0] + 'icon'}/>
                                         </Button>
@@ -213,9 +228,16 @@ const CreateTeam = () => {
             </Grid>
             <Grid container spacing={3}>
                 {pokemons.map((pokemon) => {    
+                    let isFav = false
+                    for (let i = 0; i < favedmons.length; i++) {
+                        if (favedmons[i][0] === pokemon[1][0]) {
+                            isFav = true
+                            break
+                        }
+                    }
                     return (
                         <Grid item xs={3}>
-                            <Pokemon key={pokemon[1][0]} pokename={pokemon[1][0]} url={pokemon[1].url}/>
+                            <Pokemon key={pokemon[1][0]} pokename={pokemon[1][0]} url={pokemon[1].url} pid={pokemon[0]} isFav={isFav}/>
                             <Button key={pokemon[1][0] + 'button'} onClick={() => handleAdd(pokemon)}>
                                 <AddCircleIcon key={pokemon[1][0] + 'icon'}/>
                             </Button>
