@@ -24,7 +24,7 @@ class DBInitializer
             $dbName = 'pokeMain';
             $connectionName = 'poketeams:us-east4:poke-main';
             $socketDir = '/cloudsql';
-            $connConfig = [
+            $conn_config = [
                 PDO::ATTR_TIMEOUT => 5,
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
             ];

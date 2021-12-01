@@ -101,7 +101,7 @@ export default function App() {
               )}
             </Route>
             <Route>
-              <Route exact path='/Profile' element={<Profile/>}/>
+              <Route exact path='/profile/:uid' component={Profile} element={<Profile/>}/>
             </Route>
           </Routes>
       </Router>
