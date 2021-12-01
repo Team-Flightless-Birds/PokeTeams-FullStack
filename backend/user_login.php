@@ -1,6 +1,6 @@
 <?php
-require('DBInitializer.php');
-$db = DBInitializer::initUnixDatabaseConnection();
+require('DBLoginReadOnly.php');
+$db = DBLoginReadOnly::initUnixDatabaseConnection();
 
 $method = $_SERVER['REQUEST_METHOD'];
 header('Access-Control-Allow-Origin: *');
@@ -29,6 +29,10 @@ if (!$sql_result) {
     if($result_arr[0] > 0)
     {
         $login_obj->login_success = true;
+        $sql_result = $db->prepare("SELECT DISTINCT UID FROM Users WHERE email = ?;");
+        $sql_result->execute([$email]);
+        $arr = $sql_result->fetchAll(PDO::FETCH_COLUMN);
+        $login_obj->uid = $arr[0];
         echo json_encode($login_obj);
     }else
     {
