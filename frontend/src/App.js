@@ -109,7 +109,7 @@ export default function App() {
               )}
             </Route>
             <Route>
-              <Route exact path='/profile/:uid' component={Profile} element={<Profile/>}/>
+              <Route exact path='/profile/:urlid' component={Profile} element={<Profile/>}/>
             </Route>
             <Route>
               <Route exact path='/create' element={<CreateTeam auth={auth} setAuth={setAuth}/>}/>
