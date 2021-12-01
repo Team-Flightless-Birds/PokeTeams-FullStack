@@ -45,6 +45,9 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
    case '/del_fav_pokemon.php':
       require 'del_fav_pokemon.php';
       break;
+   case '/get_all_not_following.php':
+      require 'get_all_not_following.php';
+      break;
    default:
       http_response_code(404);
       exit('Not Found');

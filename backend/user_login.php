@@ -1,6 +1,6 @@
 <?php
-require('DBInitializer.php');
-$db = DBInitializer::initUnixDatabaseConnection();
+require('DBLoginReadOnly.php');
+$db = DBLoginReadOnly::initUnixDatabaseConnection();
 
 $method = $_SERVER['REQUEST_METHOD'];
 header('Access-Control-Allow-Origin: *');
