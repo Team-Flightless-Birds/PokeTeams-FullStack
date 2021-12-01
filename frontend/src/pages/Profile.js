@@ -30,10 +30,6 @@ export default function Profile() {
     const email = window.sessionStorage.getItem("email")
     const [urlemail, setUrlEmail] = useState("");
 
-    if (!urlid) {
-        urlid = uid
-    }
-
     useEffect(() => {
         fetch('https://backend-dot-poketeams.uk.r.appspot.com/following.php?uid=' + urlid)
             .then((res) => res.json())
