@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
 import Home from './pages/home';
 import Profile from './pages/Profile';
+import CreateTeam from './pages/createTeam';
 import logo from './images/logo.jpg';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -22,10 +23,6 @@ import './App.css';
 export default function App() {
   const [auth, setAuth] = useState(false);
   const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleChange = () => {
-    setAuth(!auth);
-  };
 
   const handleMenu = (event) => {
     setAnchorEl(event.currentTarget);
@@ -85,9 +82,6 @@ export default function App() {
                   </Menu>
                 </div>
               )}
-              {!auth && (
-                <Button onClick={handleChange} color='inherit' style={{textTransform:'none', fontSize:'20px'}}>Login</Button>
-              )}
             </Toolbar>
           </AppBar>
         </Box>
@@ -101,7 +95,10 @@ export default function App() {
               )}
             </Route>
             <Route>
-              <Route exact path='/Profile' element={<Profile/>}/>
+              <Route exact path='/profile' element={<Profile/>}/>
+            </Route>
+            <Route>
+              <Route exact path='/create' element={<CreateTeam auth={auth} setAuth={setAuth}/>}/>
             </Route>
           </Routes>
       </Router>
