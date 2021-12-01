@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {BrowserRouter as Router, Routes, Route, Navigate} from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/home';
 import Profile from './pages/Profile';
 import logo from './images/logo.jpg';
@@ -21,7 +21,10 @@ import './App.css';
 
 export default function App() {
   const [auth, setAuth] = useState(false);
+  const [email, setEmail] = useState('');
+  const [uid, setUid] = useState('');
   const [anchorEl, setAnchorEl] = useState(null);
+  const [link, setLink] = useState('')
 
   const handleChange = () => {
     setAuth(!auth);
@@ -34,12 +37,23 @@ export default function App() {
   const handleClose = () => {
     setAnchorEl(null);
   };
-  
+
+  const profile = () => {
+    setLink("profile/" + uid)
+    console.log(uid)
+  }
+
+
+  // useEffect(() => {
+  //   setLink("/profile/" + uid)
+  //   console.log(uid)
+  // }, [uid])
+
   return (
     <div>
       <Router>
-        <Box  sx={{ flexGrow: 1 }}>
-          <AppBar style={{backgroundColor: '#42aaff'}} position='static'>
+        <Box sx={{ flexGrow: 1 }}>
+          <AppBar style={{ backgroundColor: '#42aaff' }} position='static'>
             <Toolbar>
               <IconButton
                 size='large'
@@ -50,7 +64,7 @@ export default function App() {
               >
                 <MenuIcon />
               </IconButton>
-              <Button component="div" sx={{ flexGrow: 1 }} style={{borderColor: '#42aaff'}}>
+              <Button component="div" sx={{ flexGrow: 1 }} style={{ borderColor: '#42aaff' }}>
                 <img src={logo} alt='PokeTeams'></img>
               </Button>
               {auth && (
@@ -81,29 +95,29 @@ export default function App() {
                     onClose={handleClose}
                   >
                     <MenuItem onClick={handleClose}>Create a team</MenuItem>
-                    <MenuItem onClick={handleClose}>My Profile</MenuItem>
+                    <MenuItem onClick={() => profile()} href={link}>My Profile</MenuItem>
                   </Menu>
                 </div>
               )}
               {!auth && (
-                <Button onClick={handleChange} color='inherit' style={{textTransform:'none', fontSize:'20px'}}>Login</Button>
+                <Button onClick={handleChange} color='inherit' style={{ textTransform: 'none', fontSize: '20px' }}>Login</Button>
               )}
             </Toolbar>
           </AppBar>
         </Box>
-          <Routes>
-            <Route>
-              {!auth && (
-                <Route exact path='/' element={<Home auth={auth} setAuth={setAuth}/>}/>
-              )}
-              {auth && (
-                <Route path="/" element={<Navigate replace to="/profile" />} />
-              )}
-            </Route>
-            <Route>
-              <Route exact path='/profile/:uid' component={Profile} element={<Profile/>}/>
-            </Route>
-          </Routes>
+        <Routes>
+          <Route>
+            {!auth && (
+              <Route exact path='/' element={<Home auth={auth} setAuth={setAuth} uid={uid} setUid={setUid} email={email} setEmail={setEmail} />} />
+            )}
+            {auth && (
+              <Route path="/" element={<Profile auth={auth} setAuth={setAuth} uid={uid} setUid={setUid} email={email} setEmail={setEmail} />} />
+            )}
+          </Route>
+          <Route>
+            <Route path='/profile/:urlid' component={Profile} element={<Profile auth={auth} setAuth={setAuth} uid={uid} setUid={setUid} email={email} setEmail={setEmail} />} />
+          </Route>
+        </Routes>
       </Router>
     </div>
   );
