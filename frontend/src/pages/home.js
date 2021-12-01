@@ -11,6 +11,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 
+
 const Home = ({auth, setAuth}) => {
     const [openLogin, setOpenLogin] = useState(false);
     const [openSignUp, setOpenSignUp] = useState(false);
@@ -60,7 +61,12 @@ const Home = ({auth, setAuth}) => {
             .then((res)=>{
               if (res.login_success) {
                 setAuth(true)
+                window.sessionStorage.setItem("auth", auth);
+                window.sessionStorage.setItem("uid", res.uid);
+                window.sessionStorage.setItem("email", email);
                 handleCloseModalLogin()
+
+
               }
             });
     }
@@ -78,7 +84,7 @@ const Home = ({auth, setAuth}) => {
                         <ul>
                             <li>
                                 <Typography variant='body1'>
-                                    Create Teams of six Pokémon from the more than 800 in the first 7 generations of the games!
+                                    Create teams of six Pokémon from over 800 available Pokémon in the first 7 generations of the games!
                                 </Typography>
                             </li>
                             <li>
@@ -88,7 +94,7 @@ const Home = ({auth, setAuth}) => {
                             </li>
                             <li>
                                 <Typography variant='body1'>
-                                    Compare favorite Pokémon and teams with other Users of the app!
+                                    Compare favorite Pokémon and teams with other users of the app!
                                 </Typography>
                             </li>
                         </ul>
