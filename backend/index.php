@@ -66,6 +66,9 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
    case '/delete_team.php':
       require 'delete_team.php';
       break;
+   case '/get_gym_leaders.php':
+      require 'get_gym_leaders.php';
+      break;
    default:
       http_response_code(404);
       exit('Not Found');
