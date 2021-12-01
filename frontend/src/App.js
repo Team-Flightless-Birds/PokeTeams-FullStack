@@ -49,7 +49,7 @@ export default function App() {
               <Button component="div" sx={{ flexGrow: 1 }} style={{ borderColor: '#42aaff' }}>
                 <img src={logo} alt='PokeTeams'></img>
               </Button>
-              {uid.length > 0 && (
+              {uid && (
                 <div>
                   <IconButton
                     size='large'

@@ -75,7 +75,7 @@ const Home = () => {
     }
 
     useEffect(() => {
-        if (uid.length > 0) {
+        if (uid) {
             navigate(`/profile/${uid}`);
         }
     })

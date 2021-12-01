@@ -28,6 +28,7 @@ export default function Profile() {
     let { urlid } = useParams();
     const uid = window.sessionStorage.getItem("uid")
     const email = window.sessionStorage.getItem("email")
+    const [urlemail, setUrlEmail] = useState("");
 
     if (!urlid) {
         urlid = uid
@@ -38,14 +39,12 @@ export default function Profile() {
             .then((res) => res.json())
             .then((res) => {
                 let f = res.following
-                for (const [key, value] of Object.entries(f)) {
-                    // following.push([key, value])
-                    setFollowing([...following, [key, value]])
-                    //console.log(`${key}: ${value}`);
-                }
-                //console.log(following[0][0])
-                //console.log(typeof(following[0][0]))
-                console.log(uid)
+
+                setFollowing(Object.entries(res.following))
+                // for (const [key, value] of Object.entries(f)) {
+                //     setFollowing([...following, [key, value]])
+                // }
+
             })
 
         fetch('https://backend-dot-poketeams.uk.r.appspot.com/get_fav_pokemon.php?uid=' + urlid)
@@ -53,23 +52,22 @@ export default function Profile() {
             .then((res) => {
                 let f = res.fav_pokemons
                 for (const [key, value] of Object.entries(f)) {
-                    // following.push([key, value])
                     setFavs([...favs, [key, value]])
-                    //console.log(`${key}: ${value}`);
                 }
             });
-
-
 
         fetch('https://backend-dot-poketeams.uk.r.appspot.com/user_teams.php?uid=' + urlid)
             .then((res) => res.json())
             .then((res) => {
                 let f = res.teams
                 for (const [key, value] of Object.entries(f)) {
-                    // following.push([key, value])
                     setTeams([...teams, [key, value]])
-                    //console.log(`${key}: ${value}`);
                 }
+            });
+        fetch('https://backend-dot-poketeams.uk.r.appspot.com/uid_to_email.php?uid=' + urlid)
+            .then((res) => res.json())
+            .then((res) => {
+                setUrlEmail(res.email)
             });
 
     }, [urlid]);
@@ -83,6 +81,7 @@ export default function Profile() {
             .then((res) => {
             });
 
+        this.forceUpdate();
     }
 
 
@@ -91,17 +90,35 @@ export default function Profile() {
     if (uid.length > 0) { // if logged in
 
         let following_list_items = []
-        for (let i = 0; i < following.length; i++) {
-            let follow = following[i]
+        following.map((follow, i, arr) => {    
+            //let follow = following[i]
             let link = "/profile/" + follow[0]
+            let main = "/profile/" + urlid
+            console.log(following.length)
 
-            if (i === following.length - 1) {
-                following_list_items.push(<ListItem ><ListItemButton component="a" href={link}>{follow[1]}</ListItemButton><Button onClick={() => unfollow(follow[0])}>Unfollow</Button></ListItem>)
+            if (i === arr.length - 1) {
+                following_list_items.push(<ListItem ><ListItemButton component="a" href={link}>{follow[1]}</ListItemButton><Button href={main} onClick={() => unfollow(follow[0])}>Unfollow</Button></ListItem>)
             }
             else {
-                following_list_items.push(<ListItem ><ListItemButton divider component="a" href={link}>{follow[1]}</ListItemButton><Button>Unfollow</Button></ListItem>)
+                following_list_items.push(<ListItem ><ListItemButton divider component="a" href={link}>{follow[1]}</ListItemButton><Button href={main} onClick={() => unfollow(follow[0])}>Unfollow</Button></ListItem>)
             }
-        }
+        })
+
+        // let following_list_items = []
+        // console.log(following)
+        // for (let i = 0; i < following.length; i++) {
+        //     let follow = following[i]
+        //     let link = "/profile/" + follow[0]
+        //     let main = "/profile/" + urlid
+        //     console.log(following.length)
+
+        //     if (i === following.length - 1) {
+        //         following_list_items.push(<ListItem ><ListItemButton component="a" href={link}>{follow[1]}</ListItemButton><Button href={main} onClick={() => unfollow(follow[0])}>Unfollow</Button></ListItem>)
+        //     }
+        //     else {
+        //         following_list_items.push(<ListItem ><ListItemButton divider component="a" href={link}>{follow[1]}</ListItemButton><Button href={main} onClick={() => unfollow(follow[0])}>Unfollow</Button></ListItem>)
+        //     }
+        // }
 
         let fav_image_list = []
         for (let i = 0; i < favs.length; i++) {
@@ -145,7 +162,7 @@ export default function Profile() {
         return (
             <div className='App-header'>
                 <div>
-                    <Typography style={{ marginBottom: '20px' }} align='center' variant='h3'>{uid}</Typography>
+                    <Typography style={{ marginBottom: '20px' }} align='center' variant='h3'>{urlemail}</Typography>
                     <Typography style={{ marginBottom: '20px' }} align='center' variant='h3'>Followed Users</Typography>
                     <List sx={style}>
                         {following_list_items}
