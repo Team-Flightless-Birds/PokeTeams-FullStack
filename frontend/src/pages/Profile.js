@@ -28,7 +28,6 @@ export default function Profile() {
     let { urlid } = useParams();
     const uid = window.sessionStorage.getItem("uid")
     const email = window.sessionStorage.getItem("email")
-    const auth = window.sessionStorage.getItem("auth")
 
     if (!urlid) {
         urlid = uid
@@ -89,14 +88,14 @@ export default function Profile() {
 
 
 
-    if (auth) { // if logged in
+    if (uid.length > 0) { // if logged in
 
         let following_list_items = []
         for (let i = 0; i < following.length; i++) {
             let follow = following[i]
             let link = "/profile/" + follow[0]
 
-            if (i == following.length - 1) {
+            if (i === following.length - 1) {
                 following_list_items.push(<ListItem ><ListItemButton component="a" href={link}>{follow[1]}</ListItemButton><Button onClick={() => unfollow(follow[0])}>Unfollow</Button></ListItem>)
             }
             else {
@@ -134,7 +133,7 @@ export default function Profile() {
             let link = "/edit/" + tid
 
 
-            if (i == teams.length - 1) {
+            if (i === teams.length - 1) {
                 team_list.push(<ListItem ><ListItemButton component="a" href={link}>{name}</ListItemButton><Button>Delete Team</Button></ListItem>)
             }
             else {

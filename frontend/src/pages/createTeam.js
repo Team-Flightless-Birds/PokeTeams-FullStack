@@ -1,5 +1,5 @@
 import '../App.css';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -18,8 +18,9 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import Grid from '@mui/material/Grid';
+import { useNavigate } from "react-router-dom";
 
-const CreateTeam = ({auth, setAuth, uid}) => {
+const CreateTeam = () => {
     const [teamName, setTeamName] = useState('Team Name');
     const [openTeamNameChange, setOpenTeamNameChange] = useState(false);
     const [keyword, setKeyword] = useState('');
@@ -27,24 +28,42 @@ const CreateTeam = ({auth, setAuth, uid}) => {
     const [favorited, setFavorited] = useState(false);
     const [pokemons, setPokemons] = useState([]);
     const [teammons, setTeammons] = useState([]);
-
+    const uid = window.sessionStorage.getItem("uid")
 
     const handleSearch = () => {
-        if (type.length > 0) {
-            fetch('https://backend-dot-poketeams.uk.r.appspot.com/get_pokemons.php?keyword=' + keyword + '?type=' + type)
+        console.log(type)
+        let searchString = 'https://backend-dot-poketeams.uk.r.appspot.com/get_pokemons.php?'
+        if (favorited) { 
+            searchString = searchString + 'is_favorite=true&uid=' + uid + '&'
+        }
+        if (type.length > 0 && keyword.length > 0) {
+            fetch(searchString + 'type=' + type + '&keyword=' + keyword)
                 .then((res) => res.json())
                 .then((res)=>{
                     setPokemons(Object.entries(res.pokemons_filtered))
                 });
+        } else if (keyword.length > 0) {
+            fetch(searchString + 'keyword=' + keyword)
+                .then((res) => res.json())
+                .then((res)=>{
+                    setPokemons(Object.entries(res.pokemons_filtered))
+                });
+        } else if (type.length > 0) {
+            fetch(searchString + 'type=' + type)
+            .then((res) => res.json())
+            .then((res)=>{
+                setPokemons(Object.entries(res.pokemons_filtered))
+            });
         } else {
-            fetch('https://backend-dot-poketeams.uk.r.appspot.com/get_pokemons.php?keyword=' + keyword)
-                .then((res) => res.json())
-                .then((res)=>{
-                    setPokemons(Object.entries(res.pokemons_filtered))
-                });
+            fetch(searchString)
+            .then((res) => res.json())
+            .then((res)=>{
+                setPokemons(Object.entries(res.pokemons_filtered))
+            });
         }
     }
 
+    let navigate = useNavigate();
     const handleFavorited = () => setFavorited(!favorited);
     const handleType = (e) => setTypeFilter(e.target.value);
     const handleOpenModalTeam = () => setOpenTeamNameChange(true);
@@ -59,6 +78,12 @@ const CreateTeam = ({auth, setAuth, uid}) => {
             alert("Must remove a Pokemon from your team first!")
         }
     }
+
+    useEffect(() => {
+        if (uid.length === 0) {
+            navigate(`/`);
+        }
+    })
 
     const handleRemove = (teammon) => {
         setTeammons(teammons.filter(mon => mon[1][0] !== teammon[1][0]))
@@ -75,7 +100,7 @@ const CreateTeam = ({auth, setAuth, uid}) => {
                         break;
                     }
                     fetch('https://backend-dot-poketeams.uk.r.appspot.com/add_pokemon_to_team.php?tid=' + tid + '&pokeindex=' + teammons[i][0])
-                    //should redirect
+                    navigate(`/profile/${uid}`);
                 } 
             })
         } else {
@@ -99,55 +124,37 @@ const CreateTeam = ({auth, setAuth, uid}) => {
                 <Grid item xs={2}></Grid>
                 <Grid item xs={2}></Grid>
                 <Grid item xs={8}>
-                    <Card sx={{  }}>
-                        <CardContent sx={{alignItems: 'center'}}>
-                            <Grid container spacing={2}>
-                                <Grid item xs={2}></Grid>
-                                <Grid item xs={8}>
-                                    <Grid container spacing={2}>
-                                        <Grid item xs={2}></Grid>
-                                        <Grid item xs={8}>
-                                            <Grid container spacing={2}>
-                                                <Grid item xs={2}></Grid>
-                                                <Grid item xs={8}>
-                                                    <Typography sx={{display: 'inline-block', ml: '50px'}} variant='h4'>
-                                                        {teamName}
-                                                    </Typography>
-                                                    <Button sx={{display: 'inline-block'}} onClick={handleOpenModalTeam} size='medium'><EditSharpIcon/></Button>
-                                                </Grid>
-                                                <Grid item xs={2}></Grid>
-                                            </Grid>
-                                        </Grid>
-                                        <Grid item xs={2}></Grid>
-                                    </Grid>
-                                    <Dialog open={openTeamNameChange} onClose={handleCloseModalTeam}>
-                                        <DialogTitle>Edit Team Name</DialogTitle>
-                                        <DialogContent>
-                                            <TextField
-                                                autoFocus
-                                                onChange={handleTeamName}
-                                                margin="dense"
-                                                id="team name"
-                                                label="Team Name"
-                                                type="text"
-                                                variant="standard"
-                                            />
-                                        </DialogContent>
-                                        <DialogActions>
-                                            <Button onClick={handleCloseModalTeam}>Cancel</Button>
-                                            <Button onClick={handleCloseModalTeam}>Save</Button>
-                                        </DialogActions>
-                                    </Dialog>
-                                </Grid>
-                                <Grid item xs={2}></Grid>
-                            </Grid>
+                    <Card>
+                        <CardContent>
+                            <Typography sx={{display: 'inline-block'}} variant='h4'>
+                                {teamName}
+                            </Typography>
+                            <Button sx={{display: 'inline-block'}} onClick={handleOpenModalTeam} size='medium'><EditSharpIcon/></Button>
+                            <Dialog open={openTeamNameChange} onClose={handleCloseModalTeam}>
+                                <DialogTitle>Edit Team Name</DialogTitle>
+                                <DialogContent>
+                                    <TextField
+                                        autoFocus
+                                        onChange={handleTeamName}
+                                        margin="dense"
+                                        id="team name"
+                                        label="Team Name"
+                                        type="text"
+                                        variant="standard"
+                                    />
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleCloseModalTeam}>Cancel</Button>
+                                    <Button onClick={handleCloseModalTeam}>Save</Button>
+                                </DialogActions>
+                            </Dialog>
                             <Grid container spacing={2}>
                             {teammons.map((teammon) => {
                                 return(
                                     <Grid item xs={4}>
                                         <Pokemon pokename={teammon[1][0]} url={teammon[1].url}/>
                                         <Button key={teammon[1][0] + 'button'} onClick={() => handleRemove(teammon)}>
-                                            <RemoveCircleIcon sx={{ml: '190px'}} key={teammon[1][0] + 'icon'}/>
+                                            <RemoveCircleIcon sx={{mx: '50%'}} key={teammon[1][0] + 'icon'}/>
                                         </Button>
                                     </Grid>
                                     )
@@ -210,7 +217,7 @@ const CreateTeam = ({auth, setAuth, uid}) => {
                         <Grid item xs={3}>
                             <Pokemon key={pokemon[1][0]} pokename={pokemon[1][0]} url={pokemon[1].url}/>
                             <Button key={pokemon[1][0] + 'button'} onClick={() => handleAdd(pokemon)}>
-                                <AddCircleIcon sx={{pl: '210px'}} key={pokemon[1][0] + 'icon'}/>
+                                <AddCircleIcon key={pokemon[1][0] + 'icon'}/>
                             </Button>
                         </Grid>
                     )
