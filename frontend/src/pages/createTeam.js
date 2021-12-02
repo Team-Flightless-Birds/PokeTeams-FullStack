@@ -1,5 +1,5 @@
 import '../App.css';
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Typography from '@mui/material/Typography';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
@@ -29,45 +29,46 @@ const CreateTeam = () => {
     const [pokemons, setPokemons] = useState([]);
     const [teammons, setTeammons] = useState([]);
     const [favedmons, setFavedmons] = useState([]);
+    const [update, setUpdate] = useState(false)
     const uid = window.sessionStorage.getItem("uid");
-    
+
     useEffect(() => {
         fetch('https://backend-dot-poketeams.uk.r.appspot.com/get_fav_pokemon.php?uid=' + uid)
-        .then((res) => res.json())
-        .then((res) => {
-            setFavedmons(Object.entries(res.fav_pokemons))
-        })
-    }, [])
+            .then((res) => res.json())
+            .then((res) => {
+                setFavedmons(Object.entries(res.fav_pokemons))
+            })
+    }, [update])
 
     const handleSearch = () => {
         let searchString = 'https://backend-dot-poketeams.uk.r.appspot.com/get_pokemons.php?'
-        if (favorited) { 
+        if (favorited) {
             searchString = searchString + 'is_favorite=true&uid=' + uid + '&'
         }
         if (type.length > 0 && keyword.length > 0) {
             fetch(searchString + 'type=' + type + '&keyword=' + keyword)
                 .then((res) => res.json())
-                .then((res)=>{
+                .then((res) => {
                     setPokemons(Object.entries(res.pokemons_filtered))
                 });
         } else if (keyword.length > 0) {
             fetch(searchString + 'keyword=' + keyword)
                 .then((res) => res.json())
-                .then((res)=>{
+                .then((res) => {
                     setPokemons(Object.entries(res.pokemons_filtered))
                 });
         } else if (type.length > 0) {
             fetch(searchString + 'type=' + type)
-            .then((res) => res.json())
-            .then((res)=>{
-                setPokemons(Object.entries(res.pokemons_filtered))
-            });
+                .then((res) => res.json())
+                .then((res) => {
+                    setPokemons(Object.entries(res.pokemons_filtered))
+                });
         } else {
             fetch(searchString)
-            .then((res) => res.json())
-            .then((res)=>{
-                setPokemons(Object.entries(res.pokemons_filtered))
-            });
+                .then((res) => res.json())
+                .then((res) => {
+                    setPokemons(Object.entries(res.pokemons_filtered))
+                });
         }
     }
 
@@ -100,28 +101,28 @@ const CreateTeam = () => {
     const handleSumbit = () => {
         if (teammons.length > 0) {
             fetch('https://backend-dot-poketeams.uk.r.appspot.com/create_user_team.php?uid=' + uid + '&team_name=' + teamName)
-            .then((res) => res.json())
-            .then((res)=>{
-                const tid = res.tid
-                for (let i = 0; i < teammons.length; i++) {
-                    if (i > 5) {
-                        break;
+                .then((res) => res.json())
+                .then((res) => {
+                    const tid = res.tid
+                    for (let i = 0; i < teammons.length; i++) {
+                        if (i > 5) {
+                            break;
+                        }
+                        fetch('https://backend-dot-poketeams.uk.r.appspot.com/add_pokemon_to_team.php?tid=' + tid + '&pokeindex=' + teammons[i][0])
+                        navigate(`/profile/${uid}`);
                     }
-                    fetch('https://backend-dot-poketeams.uk.r.appspot.com/add_pokemon_to_team.php?tid=' + tid + '&pokeindex=' + teammons[i][0])
-                    navigate(`/profile/${uid}`);
-                } 
-            })
+                })
         } else {
             alert('Must add at least one Pokemon to your team first!')
         }
     }
 
-    return(
+    return (
         <div className='App-header'>
             <Grid container spacing={2}>
                 <Grid item xs={2}></Grid>
                 <Grid item xs={8}>
-                    <Card sx={{ mt: '20px'}}>
+                    <Card sx={{ mt: '20px' }}>
                         <CardContent>
                             <Typography align='center' variant='h3'>
                                 Create a Team!
@@ -134,10 +135,10 @@ const CreateTeam = () => {
                 <Grid item xs={8}>
                     <Card>
                         <CardContent>
-                            <Typography sx={{display: 'inline-block'}} variant='h4'>
+                            <Typography sx={{ display: 'inline-block' }} variant='h4'>
                                 {teamName}
                             </Typography>
-                            <Button sx={{display: 'inline-block'}} onClick={handleOpenModalTeam} size='medium'><EditSharpIcon/></Button>
+                            <Button sx={{ display: 'inline-block' }} onClick={handleOpenModalTeam} size='medium'><EditSharpIcon /></Button>
                             <Dialog open={openTeamNameChange} onClose={handleCloseModalTeam}>
                                 <DialogTitle>Edit Team Name</DialogTitle>
                                 <DialogContent>
@@ -157,23 +158,23 @@ const CreateTeam = () => {
                                 </DialogActions>
                             </Dialog>
                             <Grid container spacing={2}>
-                            {teammons.map((teammon) => {
-                                let isFav = false
-                                for (let i = 0; i < favedmons.length; i++) {
-                                    if (favedmons[i][0] === teammon[1][0]) {
-                                        isFav = true
-                                        break
+                                {teammons.map((teammon) => {
+                                    let isFav = false
+                                    for (let i = 0; i < favedmons.length; i++) {
+                                        if (favedmons[i][0] === teammon[1][0]) {
+                                            isFav = true
+                                            break
+                                        }
                                     }
-                                }
-                                return(
-                                    <Grid item xs={4}>
-                                        <Pokemon pokename={teammon[1][0]} url={teammon[1].url} pid={teammon[0]} isFav={isFav}/>
-                                        <Button key={teammon[1][0] + 'button'} onClick={() => handleRemove(teammon)}>
-                                            <RemoveCircleIcon sx={{mx: '50%'}} key={teammon[1][0] + 'icon'}/>
-                                        </Button>
-                                    </Grid>
+                                    return (
+                                        <Grid item xs={4}>
+                                            <Pokemon pokename={teammon[1][0]} url={teammon[1].url} pid={teammon[0]} isFav={isFav} update={update} setUpdate={setUpdate} />
+                                            <Button key={teammon[1][0] + 'button'} onClick={() => handleRemove(teammon)}>
+                                                <RemoveCircleIcon sx={{ mx: '50%' }} key={teammon[1][0] + 'icon'} />
+                                            </Button>
+                                        </Grid>
                                     )
-                            })}
+                                })}
                             </Grid>
                         </CardContent>
                         <CardActions>
@@ -184,7 +185,7 @@ const CreateTeam = () => {
                 <Grid item xs={2}></Grid>
                 <Grid item xs={2}></Grid>
                 <Grid item xs={8}>
-                    <Card sx={{  }}>
+                    <Card sx={{}}>
                         <CardContent>
                             <Typography align='center' variant='h4'>Search</Typography>
                         </CardContent>
@@ -214,7 +215,7 @@ const CreateTeam = () => {
                                 </Grid>
                                 <Grid item xs={2}>
                                     <FormGroup>
-                                        <FormControlLabel onClick={handleFavorited} control={<Checkbox/>} label="Favorited?" />
+                                        <FormControlLabel onClick={handleFavorited} control={<Checkbox />} label="Favorited?" />
                                     </FormGroup>
                                 </Grid>
                                 <Grid item xs={2}>
@@ -227,7 +228,7 @@ const CreateTeam = () => {
                 </Grid>
             </Grid>
             <Grid container spacing={3}>
-                {pokemons.map((pokemon) => {    
+                {pokemons.map((pokemon) => {
                     let isFav = false
                     for (let i = 0; i < favedmons.length; i++) {
                         if (favedmons[i][0] === pokemon[1][0]) {
@@ -237,9 +238,9 @@ const CreateTeam = () => {
                     }
                     return (
                         <Grid item xs={3}>
-                            <Pokemon key={pokemon[1][0]} pokename={pokemon[1][0]} url={pokemon[1].url} pid={pokemon[0]} isFav={isFav}/>
+                            <Pokemon key={pokemon[1][0]} pokename={pokemon[1][0]} url={pokemon[1].url} pid={pokemon[0]} isFav={isFav} update={update} setUpdate={setUpdate} />
                             <Button key={pokemon[1][0] + 'button'} onClick={() => handleAdd(pokemon)}>
-                                <AddCircleIcon key={pokemon[1][0] + 'icon'}/>
+                                <AddCircleIcon key={pokemon[1][0] + 'icon'} />
                             </Button>
                         </Grid>
                     )
@@ -248,4 +249,4 @@ const CreateTeam = () => {
         </div>
     )
 }
-export default CreateTeam; 
+export default CreateTeam;
