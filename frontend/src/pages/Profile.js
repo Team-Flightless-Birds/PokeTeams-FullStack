@@ -31,7 +31,7 @@ export default function Profile() {
     const uid = window.sessionStorage.getItem("uid")
     const email = window.sessionStorage.getItem("email")
     const [urlemail, setUrlEmail] = useState("");
-    const [team_list, setTeam_list] = useState([]);
+    const [team_list, setTeam_list] = useState({team_list:[]});
 
     useEffect(() => {
         fetch('https://backend-dot-poketeams.uk.r.appspot.com/following.php?uid=' + urlid)
@@ -109,7 +109,9 @@ export default function Profile() {
                                     }
                                 </ImageList>
                             </ListItem>;
-                    setTeam_list([...team_list, poke_element]);
+                    setTeam_list(prevState => ({
+                        team_list: [ poke_element, ...prevState.team_list]
+                      }))
                 });
         }
     }, [teams])
@@ -216,7 +218,7 @@ export default function Profile() {
                     <Typography align='center' variant='h3'>Teams</Typography>
                     <List align='center'>
                         {
-                            team_list
+                            team_list.team_list
                         }
                     </List>
                 </div>
