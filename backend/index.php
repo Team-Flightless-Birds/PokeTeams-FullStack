@@ -72,6 +72,9 @@ switch (@parse_url($_SERVER['REQUEST_URI'])['path']) {
    case '/get_pokemons_in_team2.php':
       require 'get_pokemons_in_team2.php';
       break;
+   case '/update_email.php':
+      require 'update_email.php';
+      break;
    default:
       http_response_code(404);
       exit('Not Found');
