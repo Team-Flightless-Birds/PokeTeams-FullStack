@@ -31,6 +31,7 @@ export default function Profile() {
     const uid = window.sessionStorage.getItem("uid")
     const email = window.sessionStorage.getItem("email")
     const [urlemail, setUrlEmail] = useState("");
+    const [team_list, setTeam_list] = useState([]);
 
     useEffect(() => {
         fetch('https://backend-dot-poketeams.uk.r.appspot.com/following.php?uid=' + urlid)
@@ -48,7 +49,7 @@ export default function Profile() {
             .then((res) => res.json())
             .then((res) => {
                 setTeams(Object.entries(res.user_teams))
-            });
+            })
         fetch('https://backend-dot-poketeams.uk.r.appspot.com/uid_to_email.php?uid=' + urlid)
             .then((res) => res.json())
             .then((res) => {
@@ -59,8 +60,59 @@ export default function Profile() {
             .then((res) => {
                 setNotFollowing(Object.entries(res.users_not_following))
             })
+
     }, [urlid]);
 
+    useEffect(()=>
+    {
+                
+        console.log("use effect triggered")
+        //console.log(teams)
+        for (const team of teams) {
+            let name = team[1]
+            let tid = team[0]
+            console.log(team)
+
+            fetch('https://backend-dot-poketeams.uk.r.appspot.com/get_pokemons_in_team.php?tid=' + tid)
+                .then((res) => res.json())
+                .then((res) => Object.entries(res.pokemons_in_team)
+                )
+                .then((pokemons)=> {
+                    let poke_element = <ListItem >
+                                <ListItem>
+                                    {name}
+                                </ListItem>
+                                <Button href={"/profile/" + uid} onClick={() => delete_team(tid)} >
+                                    Delete Team
+                                </Button>
+                                <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
+                                    {
+                                        pokemons.map((pokemon, i, arr) => {
+                                            let name = pokemon[0]
+                                            let image = pokemon[1]
+
+                                            return (
+                                                <ImageListItem>
+                                                    <img
+                                                        src={`${image}?w=248&fit=crop&auto=format`}
+                                                        srcSet={`${image}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                                                        alt={name}
+                                                        loading="lazy"
+                                                    />
+                                                    <ImageListItemBar
+                                                        title={name}
+                                                        position="below"
+                                                    />
+                                                </ImageListItem>
+                                            )
+                                        })
+                                    }
+                                </ImageList>
+                            </ListItem>;
+                    setTeam_list([...team_list, poke_element]);
+                });
+        }
+    }, [teams])
 
     const unfollow = (unfollow_uid) => {
         fetch('https://backend-dot-poketeams.uk.r.appspot.com/del_following.php?self_uid=' + uid + '&target_uid=' + unfollow_uid)
@@ -142,64 +194,7 @@ export default function Profile() {
         //     }
         // })
 
-        const get_pokemon = (tid) => {
 
-            fetch('https://backend-dot-poketeams.uk.r.appspot.com/get_pokemons_in_team.php?tid=' + tid)
-                .then((res) => res.json())
-                .then((res) => {
-                    setPokemons(Object.entries(res.pokemons_in_team))
-                });
-
-        }
-
-        let team_list = []
-        //console.log(teams)
-        for (const team of teams) {
-            let name = team[1]
-            let tid = team[0]
-            console.log(team)
-
-            //get_pokemon(tid)
-            // fetch('https://backend-dot-poketeams.uk.r.appspot.com/get_pokemons_in_team.php?tid=' + tid)
-            //     .then((res) => res.json())
-            //     .then((res) => {
-            //         setPokemons(Object.entries(res.pokemons_in_team))
-            //     });
-
-            team_list.push(
-                <ListItem >
-                    <ListItem>
-                        {name}
-                    </ListItem>
-                    <Button href={"/profile/" + uid} onClick={() => delete_team(tid)} >
-                        Delete Team
-                    </Button>
-                    <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
-                        {
-                            pokemons.map((pokemon, i, arr) => {
-                                let name = pokemon[0]
-                                let image = pokemon[1]
-
-                                return (
-                                    <ImageListItem>
-                                        <img
-                                            src={`${image}?w=248&fit=crop&auto=format`}
-                                            srcSet={`${image}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                                            alt={name}
-                                            loading="lazy"
-                                        />
-                                        <ImageListItemBar
-                                            title={name}
-                                            position="below"
-                                        />
-                                    </ImageListItem>
-                                )
-                            })
-                        }
-                    </ImageList>
-                </ListItem>
-            )
-        }
 
 
         return (

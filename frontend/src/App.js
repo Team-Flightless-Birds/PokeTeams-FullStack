@@ -90,7 +90,7 @@ export default function App() {
                 <Route exact path='/' element={<Home/>}/>
             </Route>
             <Route>
-              <Route exact path='/profile/:urlid' component={Profile} element={<Profile/>}/>
+              <Route exact path='/profile/:urlid' element={<Profile/>}/>
             </Route>
             <Route>
               <Route exact path='/create' element={<CreateTeam/>}/>
