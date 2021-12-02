@@ -13,6 +13,7 @@ import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import Home from "./home";
+import Grid from '@mui/material/Grid';
 
 
 const style = {
@@ -81,9 +82,10 @@ export default function Profile() {
                                 <ListItem>
                                     {name}
                                 </ListItem>
-                                <Button href={"/profile/" + uid} onClick={() => delete_team(tid)} >
+                                {urlid == uid ? <Button href={"/profile/" + uid} onClick={() => delete_team(tid)} >
                                     Delete Team
-                                </Button>
+                                </Button> : <div></div>}
+                                
                                 <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
                                     {
                                         pokemons.map((pokemon, i, arr) => {
@@ -153,11 +155,18 @@ export default function Profile() {
             let main = "/profile/" + urlid
 
             if (i === arr.length - 1) {
-                following_list_items.push(<ListItem ><ListItemButton component="a" href={link}>{follow[1]}</ListItemButton><Button href={main} onClick={() => unfollow(follow[0])}>Unfollow</Button></ListItem>)
+                let temp_itm = <ListItem ><ListItemButton component="a" href={link}>{follow[1]}</ListItemButton> <Button href={main} onClick={() => unfollow(follow[0])}>Unfollow</Button></ListItem>;
+                if (urlid === uid)
+                    following_list_items.push(temp_itm)
+                else
+                    following_list_items.push(<ListItem ><ListItemButton component="a" href={link}>{follow[1]}</ListItemButton></ListItem>)
             }
             else {
-                following_list_items.push(<ListItem ><ListItemButton divider component="a" href={link}>{follow[1]}</ListItemButton><Button href={main} onClick={() => unfollow(follow[0])}>Unfollow</Button></ListItem>)
-            }
+                if(urlid === uid)
+                    following_list_items.push(<ListItem ><ListItemButton divider component="a" href={link}>{follow[1]}</ListItemButton><Button href={main} onClick={() => unfollow(follow[0])}>Unfollow</Button></ListItem>)
+                else
+                    following_list_items.push(<ListItem ><ListItemButton divider component="a" href={link}>{follow[1]}</ListItemButton></ListItem>)
+                }
         })
 
         let fav_image_list = []
@@ -201,36 +210,44 @@ export default function Profile() {
         return (
             <div className='App-header'>
                 <Typography style={{ marginBottom: '20px' }} align='center' variant='h3'>{urlemail}</Typography>
-                <div>
-                    <Typography align='center' variant='h3'>Follow new User</Typography>
-                    <input ref={textInput} type="text" />
-                    <Button href={"/profile/" + uid} onClick={newFollow}>Follow</Button>
-                </div>
-                <div>
+                
+                <Grid container spacing={1}>
                     
-                    <Typography style={{ marginBottom: '20px' }} align='center' variant='h3'>Followed Users</Typography>
-                    <List sx={style}>
-                        {following_list_items}
-                    </List>
-                </div>
-                <div>
-                    <Typography align='center' variant='h3'>Favorite Pokemon</Typography>
-                    <ImageList align='center' sx={{ width: 500, height: 450 }} cols={2} rowHeight={300}>
-                        {fav_image_list}
-                    </ImageList>
-                </div>
-                <div>
-                    <Typography align='center' variant='h3'>Teams</Typography>
-                    <List align='center'>
-                        {
-                            team_list.team_list
-                        }
-                    </List>
-                </div>
+                    <Grid item xs={6}>
+                        <div>
+                            <Typography align='center' variant='h3'>Teams</Typography>
+                            <List align='center'>
+                                {
+                                    team_list.team_list
+                                }
+                            </List>
+                        </div>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <div>
+                            <Typography align='center' variant='h3'>Favorite Pokemon</Typography>
+                            <ImageList align='center' sx={{ width: '100%', height: '100%' }} cols={1} rowHeight={500}>
+                                {fav_image_list}
+                            </ImageList>
+                        </div>
+                    </Grid>
+                    <Grid item xs={3}>
+                        <div>
+                            <Typography align='center' variant='h3'>Follow new User</Typography>
+                            <input ref={textInput} type="text" />
+                            <Button href={"/profile/" + uid} onClick={newFollow}>Follow</Button>
+                        </div>
+                        <div>
+                            
+                            <Typography style={{ marginBottom: '20px' }} align='center' variant='h3'>Followed Users</Typography>
+                            <List sx={style}>
+                                {following_list_items}
+                            </List>
+                        </div>
+                    </Grid>
+                    
 
-                <div>
-
-                </div>
+                </Grid>
 
 
 
