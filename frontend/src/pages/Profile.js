@@ -63,9 +63,8 @@ export default function Profile() {
 
     }, [urlid]);
 
-    useEffect(()=>
-    {
-                
+    useEffect(() => {
+
         console.log("use effect triggered")
         //console.log(teams)
         for (const team of teams) {
@@ -77,38 +76,38 @@ export default function Profile() {
                 .then((res) => res.json())
                 .then((res) => Object.entries(res.pokemons_in_team)
                 )
-                .then((pokemons)=> {
+                .then((pokemons) => {
                     let poke_element = <ListItem >
-                                <ListItem>
-                                    {name}
-                                </ListItem>
-                                <Button href={"/profile/" + uid} onClick={() => delete_team(tid)} >
-                                    Delete Team
-                                </Button>
-                                <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
-                                    {
-                                        pokemons.map((pokemon, i, arr) => {
-                                            let name = pokemon[0]
-                                            let image = pokemon[1]
+                        <ListItem>
+                            {name}
+                        </ListItem>
+                        <Button href={"/profile/" + uid} onClick={() => delete_team(tid)} >
+                            Delete Team
+                        </Button>
+                        <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
+                            {
+                                pokemons.map((pokemon, i, arr) => {
+                                    let name = pokemon[0]
+                                    let image = pokemon[1]
 
-                                            return (
-                                                <ImageListItem>
-                                                    <img
-                                                        src={`${image}?w=248&fit=crop&auto=format`}
-                                                        srcSet={`${image}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                                                        alt={name}
-                                                        loading="lazy"
-                                                    />
-                                                    <ImageListItemBar
-                                                        title={name}
-                                                        position="below"
-                                                    />
-                                                </ImageListItem>
-                                            )
-                                        })
-                                    }
-                                </ImageList>
-                            </ListItem>;
+                                    return (
+                                        <ImageListItem>
+                                            <img
+                                                src={`${image}?w=248&fit=crop&auto=format`}
+                                                srcSet={`${image}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                                                alt={name}
+                                                loading="lazy"
+                                            />
+                                            <ImageListItemBar
+                                                title={name}
+                                                position="below"
+                                            />
+                                        </ImageListItem>
+                                    )
+                                })
+                            }
+                        </ImageList>
+                    </ListItem>;
                     setTeam_list([...team_list, poke_element]);
                 });
         }
@@ -199,8 +198,14 @@ export default function Profile() {
 
         return (
             <div className='App-header'>
+                <Typography style={{ marginBottom: '20px' }} align='center' variant='h3'>{urlemail}</Typography>
                 <div>
-                    <Typography style={{ marginBottom: '20px' }} align='center' variant='h3'>{urlemail}</Typography>
+                    <Typography align='center' variant='h3'>Follow new User</Typography>
+                    <input ref={textInput} type="text" />
+                    <Button href={"/profile/" + uid} onClick={newFollow}>Follow</Button>
+                </div>
+                <div>
+                    
                     <Typography style={{ marginBottom: '20px' }} align='center' variant='h3'>Followed Users</Typography>
                     <List sx={style}>
                         {following_list_items}
@@ -208,7 +213,7 @@ export default function Profile() {
                 </div>
                 <div>
                     <Typography align='center' variant='h3'>Favorite Pokemon</Typography>
-                    <ImageList align='center'>
+                    <ImageList align='center' sx={{ width: 500, height: 450 }} cols={2} rowHeight={300}>
                         {fav_image_list}
                     </ImageList>
                 </div>
@@ -220,11 +225,7 @@ export default function Profile() {
                         }
                     </List>
                 </div>
-                <div>
-                    <Typography align='center' variant='h3'>Follow new User</Typography>
-                    <input ref={textInput} type="text" />
-                    <Button href={"/profile/" + uid} onClick={newFollow}>Follow</Button>
-                </div>
+
                 <div>
 
                 </div>
