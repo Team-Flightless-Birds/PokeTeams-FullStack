@@ -7,36 +7,53 @@ import CardActions from '@mui/material/CardActions';
 import GymTeam from '../components/gymTeam';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 
 
 const Gym = () => {
     const [leaders, setLeaders] = useState([]);
     const [keyword, setKeyword] = useState('');
     const [type, setTypeFilter] = useState('');
-    const [game, setGame] = useState('')
+    const [badge, setBadge] = useState('')
 
 
-    const handleSearch = () => { //build out more once given correct backend
-        if (type.length > 0) {
-            fetch('https://backend-dot-poketeams.uk.r.appspot.com/get_pokemons.php?keyword=' + keyword + '?type=' + type)
+
+    const handleSearch = () => {
+        let searchString = 'https://backend-dot-poketeams.uk.r.appspot.com/get_gym_leaders.php?'
+        if (badge.length > 0) {
+            searchString = searchString + 'badge=' + badge + '&'
+        }
+        if (type.length > 0 && keyword.length > 0) {
+            fetch(searchString + 'type=' + type + '&leader_name=' + keyword)
                 .then((res) => res.json())
-                .then((res)=>{
-                    setLeaders(Object.entries(res.pokemons_filtered))
+                .then((res) => {
+                    console.log(Object.entries(res.leaders_filtered))
+                    //setLeaders(Object.entries(res.pokemons_in_team))
+                });
+        } else if (keyword.length > 0) {
+            fetch(searchString + 'leader_name=' + keyword)
+                .then((res) => res.json())
+                .then((res) => {
+                    setLeaders(Object.entries(res.leaders_filtered))
+                    console.log(Object.entries(res.leaders_filtered))
+                });
+        } else if (type.length > 0) {
+            fetch(searchString + 'type=' + type)
+                .then((res) => res.json())
+                .then((res) => {
+                    setLeaders(Object.entries(res.leaders_filtered))
+                    console.log(Object.entries(res.leaders_filtered))
                 });
         } else {
-            fetch('https://backend-dot-poketeams.uk.r.appspot.com/get_pokemons.php?keyword=' + keyword)
+            fetch(searchString)
                 .then((res) => res.json())
-                .then((res)=>{
-                    setLeaders(Object.entries(res.pokemons_filtered))
+                .then((res) => {
+                    setLeaders(Object.entries(res.leaders_filtered))
+                    console.log(Object.entries(res.leaders_filtered))
                 });
         }
     }
 
-    const handleGame = (e) => setGame(e.target.value);
+    const handleBadge = (e) => setBadge(e.target.value)
     const handleType = (e) => setTypeFilter(e.target.value);
     const handleKeyword = (e) => setKeyword(e.target.value);
 
@@ -66,37 +83,25 @@ const Gym = () => {
                     <TextField
                         onChange={handleType}
                         margin="dense"
-                        id="keyword"
+                        id="type"
                         label="Type"
                         type="text"
                         variant="standard"
                     />
-                    <FormControl fullWidth>
-                        <InputLabel id="game">Game Series</InputLabel>
-                        <Select
-                        labelId="select-game"
-                        id="select-game"
-                        value={game}
-                        label="Game"
-                        onChange={handleGame}
-                        >
-                            <MenuItem value={''}>Ten</MenuItem>
-                            <MenuItem value={''}>Twenty</MenuItem>
-                            <MenuItem value={''}>Thirty</MenuItem>
-                            <MenuItem value={''}>Ten</MenuItem>
-                            <MenuItem value={''}>Twenty</MenuItem>
-                            <MenuItem value={''}>Thirty</MenuItem>
-                            <MenuItem value={''}>Thirty</MenuItem>
-                        </Select>
-                    </FormControl>
+                    <TextField
+                        onChange={handleBadge}
+                        margin="dense"
+                        id="badge"
+                        label="Badge"
+                        type="text"
+                        variant="standard"
+                    />
                     <Button onClick={handleSearch}>Search</Button>
                 </CardActions>
             </Card>
             {leaders.map((leader) => {    
                     return (
-                        <>
-                            <GymTeam key={leader} leader={} region={} type={} badge={}/>
-                        </>
+                        <GymTeam key={leader} leader={leader[0]} tid={leader[1].TID} region={leader[1].game_name} type={leader[1].type} badge={leader[1].badge}/>
                     )
             })}
         </div>

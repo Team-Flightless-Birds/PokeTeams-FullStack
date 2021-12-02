@@ -7,13 +7,20 @@ import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Typography from '@mui/material/Typography';
+import EditSharpIcon from '@mui/icons-material/EditSharp';
 import ListItemButton from '@mui/material/ListItemButton';
 import { useParams } from 'react-router-dom'
 import ImageList from '@mui/material/ImageList';
+import Card from '@mui/material/Card';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
 import Home from "./home";
+import TextField from '@mui/material/TextField';
 import Grid from '@mui/material/Grid';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
 
 
 const style = {
@@ -23,6 +30,8 @@ const style = {
 };
 
 export default function Profile() {
+    const [changeemail, setChangeemail] = useState('Team Name');
+    const [openEmailChange, setEmailChange] = useState(false);
     const [following, setFollowing] = useState([]);
     const [favs, setFavs] = useState([]);
     const [teams, setTeams] = useState([]);
@@ -30,9 +39,28 @@ export default function Profile() {
     const [pokemons, setPokemons] = useState([]);
     let { urlid } = useParams();
     const uid = window.sessionStorage.getItem("uid")
-    const email = window.sessionStorage.getItem("email")
+    let email = window.sessionStorage.getItem("email")
     const [urlemail, setUrlEmail] = useState("");
     const [team_list, setTeam_list] = useState({team_list:[]});
+
+    const handleChangeEmail = (e) => (setChangeemail(e.target.value))
+    const handleOpenModalEmail = () => setEmailChange(true);
+    const handleCloseModalEmail = () => setEmailChange(false);
+    const updateEmail = () => {
+        fetch('https://backend-dot-poketeams.uk.r.appspot.com/update_email.php?uid=' + uid + '&new_email=' + changeemail)
+        .then((res) => res.json())
+        .then((res) => {
+            if (res.change_success) {
+                email = changeemail
+                setUrlEmail(changeemail)
+                window.sessionStorage.setItem('email', changeemail)
+
+            } else {
+                alert('duplicate email')
+            }
+            
+        })
+    }
 
     useEffect(() => {
         fetch('https://backend-dot-poketeams.uk.r.appspot.com/following.php?uid=' + urlid)
@@ -78,11 +106,13 @@ export default function Profile() {
                 .then((res) => Object.entries(res.pokemons_in_team)
                 )
                 .then((pokemons) => {
-                    let poke_element = <ListItem >
+                    let poke_element = <Card sx={{my: '10px'}}>
+                        <ListItem >
                                 <ListItem>
                                     {name}
+                                    
                                 </ListItem>
-                                {urlid == uid ? <Button href={"/profile/" + uid} onClick={() => delete_team(tid)} >
+                                {urlid === uid ? <Button href={"/profile/" + uid} onClick={() => delete_team(tid)} >
                                     Delete Team
                                 </Button> : <div></div>}
                                 
@@ -109,7 +139,8 @@ export default function Profile() {
                                         })
                                     }
                                 </ImageList>
-                            </ListItem>;
+                            </ListItem>
+                        </Card>
                     setTeam_list(prevState => ({
                         team_list: [ poke_element, ...prevState.team_list]
                       }))
@@ -129,7 +160,7 @@ export default function Profile() {
         let input = textInput.current.value;
         let flag = false
         notFollowing.map((person, i, arr) => {
-            if (person[1].toLowerCase() == input.toLowerCase()) {
+            if (person[1].toLowerCase() === input.toLowerCase()) {
                 fetch('https://backend-dot-poketeams.uk.r.appspot.com/add_following.php?self_uid=' + uid + '&target_uid=' + person[0])
                     .then((res) => res.json())
                     .then((res) => {
@@ -210,6 +241,25 @@ export default function Profile() {
         return (
             <div className='App-header'>
                 <Typography style={{ marginBottom: '20px' }} align='center' variant='h3'>{urlemail}</Typography>
+                <Button sx={{ display: 'inline-block' }} onClick={handleOpenModalEmail} size='medium'><EditSharpIcon /></Button>
+                                    <Dialog open={openEmailChange} onClose={handleCloseModalEmail}>
+                                        <DialogTitle>Change Email</DialogTitle>
+                                        <DialogContent>
+                                            <TextField
+                                                autoFocus
+                                                onChange={handleChangeEmail}
+                                                margin="dense"
+                                                id="email"
+                                                label="Email"
+                                                type="text"
+                                                variant="standard"
+                                            />
+                                        </DialogContent>
+                                        <DialogActions>
+                                            <Button onClick={handleCloseModalEmail}>Cancel</Button>
+                                            <Button onClick={updateEmail}>Save</Button>
+                                        </DialogActions>
+                                    </Dialog>
                 
                 <Grid container spacing={1}>
                     

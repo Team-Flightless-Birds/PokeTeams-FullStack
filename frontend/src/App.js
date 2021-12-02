@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Home from './pages/home';
 import Profile from './pages/Profile';
 import CreateTeam from './pages/createTeam';
+import Gym from './pages/gymLeaders';
 import logo from './images/logo.jpg';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
@@ -49,7 +50,6 @@ export default function App() {
               <Button component="div" sx={{ flexGrow: 1 }} style={{ borderColor: '#42aaff' }}>
                 <img src={logo} alt='PokeTeams'></img>
               </Button>
-              {uid && (
                 <div>
                   <IconButton
                     size='large'
@@ -76,12 +76,12 @@ export default function App() {
                     open={Boolean(anchorEl)}
                     onClose={handleClose}
                   >
+                    <MenuItem onClick={handleClose}><Link to='/gyms'>View Gym Leaders</Link></MenuItem>
                     <MenuItem onClick={handleClose}><Link to='/create'>Create a Team</Link></MenuItem>
                     <MenuItem onClick={handleClose}><Link to={link}>My Profile</Link></MenuItem>
                     <MenuItem onClick={logout}><Link from='/profile/' to='/'>Logout</Link></MenuItem>
                   </Menu>
                 </div>
-              )}
             </Toolbar>
           </AppBar>
         </Box>
@@ -94,6 +94,9 @@ export default function App() {
             </Route>
             <Route>
               <Route exact path='/create' element={<CreateTeam/>}/>
+            </Route>
+            <Route>
+              <Route exact path='/gyms' element={<Gym/>}/>
             </Route>
           </Routes>
       </Router>
