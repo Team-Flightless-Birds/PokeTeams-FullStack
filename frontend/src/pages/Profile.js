@@ -31,7 +31,7 @@ export default function Profile() {
     const uid = window.sessionStorage.getItem("uid")
     const email = window.sessionStorage.getItem("email")
     const [urlemail, setUrlEmail] = useState("");
-    const [team_list, setTeam_list] = useState([]);
+    const [team_list, setTeam_list] = useState({team_list:[]});
 
     useEffect(() => {
         fetch('https://backend-dot-poketeams.uk.r.appspot.com/following.php?uid=' + urlid)
@@ -78,37 +78,39 @@ export default function Profile() {
                 )
                 .then((pokemons) => {
                     let poke_element = <ListItem >
-                        <ListItem>
-                            {name}
-                        </ListItem>
-                        <Button href={"/profile/" + uid} onClick={() => delete_team(tid)} >
-                            Delete Team
-                        </Button>
-                        <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
-                            {
-                                pokemons.map((pokemon, i, arr) => {
-                                    let name = pokemon[0]
-                                    let image = pokemon[1]
+                                <ListItem>
+                                    {name}
+                                </ListItem>
+                                <Button href={"/profile/" + uid} onClick={() => delete_team(tid)} >
+                                    Delete Team
+                                </Button>
+                                <ImageList sx={{ width: 500, height: 450 }} cols={3} rowHeight={164}>
+                                    {
+                                        pokemons.map((pokemon, i, arr) => {
+                                            let name = pokemon[0]
+                                            let image = pokemon[1]
 
-                                    return (
-                                        <ImageListItem>
-                                            <img
-                                                src={`${image}?w=248&fit=crop&auto=format`}
-                                                srcSet={`${image}?w=248&fit=crop&auto=format&dpr=2 2x`}
-                                                alt={name}
-                                                loading="lazy"
-                                            />
-                                            <ImageListItemBar
-                                                title={name}
-                                                position="below"
-                                            />
-                                        </ImageListItem>
-                                    )
-                                })
-                            }
-                        </ImageList>
-                    </ListItem>;
-                    setTeam_list([...team_list, poke_element]);
+                                            return (
+                                                <ImageListItem>
+                                                    <img
+                                                        src={`${image}?w=248&fit=crop&auto=format`}
+                                                        srcSet={`${image}?w=248&fit=crop&auto=format&dpr=2 2x`}
+                                                        alt={name}
+                                                        loading="lazy"
+                                                    />
+                                                    <ImageListItemBar
+                                                        title={name}
+                                                        position="below"
+                                                    />
+                                                </ImageListItem>
+                                            )
+                                        })
+                                    }
+                                </ImageList>
+                            </ListItem>;
+                    setTeam_list(prevState => ({
+                        team_list: [ poke_element, ...prevState.team_list]
+                      }))
                 });
         }
     }, [teams])
@@ -221,7 +223,7 @@ export default function Profile() {
                     <Typography align='center' variant='h3'>Teams</Typography>
                     <List align='center'>
                         {
-                            team_list
+                            team_list.team_list
                         }
                     </List>
                 </div>
